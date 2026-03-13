@@ -34,7 +34,7 @@
 </div>
 
 <section>
-<h2>Tambah Buku</h2>
+<h2>Tambah Buku Baru</h2>
 
 <form id="bookForm" data-testid="bookForm">
 
@@ -76,7 +76,7 @@ id="bookFormSubmit"
 data-testid="bookFormSubmitButton"
 type="submit"
 >
-Masukkan Buku
+Masukkan Buku ke Rak
 </button>
 
 </form>
@@ -100,6 +100,7 @@ placeholder="Cari judul buku..."
 <section class="shelf">
 
 <h2>Belum selesai dibaca</h2>
+<button id="markAllComplete">✔ Semua selesai</button>
 
 <div
 id="incompleteBookList"
@@ -111,6 +112,7 @@ data-testid="incompleteBookList"
 <section class="shelf">
 
 <h2>Selesai dibaca</h2>
+<button id="markAllIncomplete">↩ Semua belum selesai</button>
 
 <div
 id="completeBookList"
@@ -148,4 +150,7 @@ Selesai dibaca
 <script src="main.js"></script>
 
 </body>
+
+<div id="toast"></div>
+
 </html>
