@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bookshelf Apps</title>
+    <link rel="stylesheet" href="style.css">
+    <script defer src="seed.js"></script>
+    <script defer src="main.js"></script>
+  </head>
+
+  <div id="toast"></div>
+
+  <body>
+
+    <h1>Bookshelf Apps</h1>
+
+    <!-- Search masih butuh perbaikan, target pengen jadiin form dan kliik baru kluar output -->
+    <section class="top-bar">
+      <button id="openAddModal" class="add-book"> + Tambah Buku</button>
+      <button id="btnImport" class="action-btn-outline">📦 Import Dummy</button>
+
+      <div class="search-section">
+        <form id="searchBook" data-testid="searchBookForm" class="search-bar">
+          <input id="searchBookTitle" type="text" 
+          data-testid="searchBookFormTitleInput" placeholder="Cari judul buku..."/>
+          <button id="searchSubmit" type="submit" data-testid="searchBookFormSubmitButton">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+          </button>
+        </form>
+      </div>
+    </section>
+
+
+    <section> 
+      <h2 class="stats-title">📊 Koleksi Buku</h2>
+      <div class="stats">
+        
+        <div class="stat">
+          <h3 id="totalBooks">0</h3>
+          <p>Total Buku</p>
+          <button class="delete-shelf-btn" id="resetBooks">🗑 Hapus Semua Buku</button>
+        </div>
+
+        <div class="stat">
+          <h3 id="completeBooks">0</h3>
+          <p>Selesai dibaca</p>
+          <button class="delete-shelf-btn" id="clearComplete">🗑 Hapus semua buku yang sudah selesai dibaca</button>
+        </div>
+
+        <div class="stat">
+          <h3 id="incompleteBooks">0</h3>
+          <p>Belum selesai dibaca</p>
+          <button class="delete-shelf-btn" id="clearIncomplete">🗑 Hapus semua buku yang belum selesai dibaca</button>
+        </div>
+      </div>
+    </section>
+
+    <div class="bookshelf-container">
+      <section class="shelf">
+        <div class="shelf-header">
+          <h2>Belum selesai dibaca</h2>
+          <button class="bulk-btn-complete" id="markAllComplete">
+            ✔ Mark all as read
+          </button>
+        </div>
+
+        <div id="incompleteBookList" data-testid="incompleteBookList">  </div>
+
+      </section>
+
+      <section class="shelf">
+        <div class="shelf-header">
+          <h2>Selesai dibaca</h2>
+          <button class="bulk-btn-incomplete" id="markAllIncomplete">
+             Mark all as unread
+          </button>
+        </div>
+        <div id="completeBookList" data-testid="completeBookList"></div>
+      </section>
+    </div>
+
+    <div id="addBookModal" class="modal">
+      <div class="modal-content">
+        <h2>Tambah Buku</h2>
+        <form id="bookForm" class="book-form" data-testid="bookForm">
+
+          <label for="bookFormTitle">Judul</label>
+          <input id="bookFormTitle"  type="text" 
+          placeholder="Judul buku*"required data-testid="bookFormTitleInput">
+
+          <label for="bookFormAuthor">Penulis</label>
+          <input id="bookFormAuthor" type="text"  
+          placeholder="Penulis*" required data-testid="bookFormAuthorInput">
+
+          <label for="bookFormAuthor">Tahun</label>
+          <input id="bookFormYear" type="number" 
+          placeholder="Tahun*" required data-testid="bookFormYearInput">
+
+          <label for="bookFormCover">Link Cover Buku</label>
+          <input id="bookFormCover" type="url" placeholder="https://example.com/image.jpg">
+
+          <p>* Wajib diisi</p>
+
+          <label>
+            <input id="bookFormIsComplete" type="checkbox" 
+            data-testid="bookFormIsCompleteCheckbox" class="checkbox-status">
+            Selesai dibaca
+          </label> 
+          <div class="modal-buttons">
+            <button id="closeAddModal" type="button" class="btn-cancel">Batal</button>
+            <button id="bookFormSubmit" type="submit" class="btn-submit" data-testid="bookFormSubmitButton">
+               Tambahkan Buku
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div id="editModal" class="modal">
+      <div class="modal-content">
+        <h2>Edit Buku</h2>
+
+        <input id="editTitle" type="text" placeholder="Judul Buku" required>
+        <input id="editAuthor" type="text" placeholder="Penulis" required>
+        <input id="editYear" type="number" placeholder="Tahun" required>
+        <input id="editCover" type="url" placeholder="Link Cover Buku">
+
+        <label>
+          <input id="editComplete" type="checkbox" class="checkbox-status">
+          Selesai dibaca
+        </label>
+
+        <div class="modal-buttons">
+          <button id="saveEdit" type="submit" class="btn-submit">Simpan</button>
+          <button type="button" class="btn-cancel" id="closeEditModal">Batal</button>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
