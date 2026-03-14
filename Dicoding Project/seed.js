@@ -18,6 +18,6 @@ const seedData = [
     {title: "Oyasumi Punpun", author: "Inio Asano", year: 2007, isComplete: false, cover: "https://cdn.myanimelist.net/images/manga/3/164420.jpg" },
     {title: "Real", author: "Takehiko Inoue", year: 1999, isComplete: true, cover: "https://cdn.myanimelist.net/images/manga/2/115939.jpg" },
     {title: "Ashita no Joe", author: "Ikki Kajiwara", year: 1968, isComplete: true, cover: "https://cdn.myanimelist.net/images/manga/1/268827.jpg" },
-    {title: "Umineko no Naku Koro ni Chiru - Ep 8", author: "Ryukishi07", year: 2012, isComplete: false, cover: "https://cdn.myanimelist.net/images/manga/3/120237.jpg" },
+    {title: "Umineko no Naku Koro ni Chiru - Ep 8", author: "Ryukishi07", year: 2012, isComplete: false, cover: "https://cdn.myanimelist.net/images/manga/3/290256.jpg" },
     {title: "20th Century Boys", author: "Naoki Urasawa", year: 1999, isComplete: false, cover: "https://cdn.myanimelist.net/images/manga/3/54439.jpg" }
 ];
