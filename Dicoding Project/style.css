@@ -100,7 +100,7 @@ box-shadow:0 4px 12px rgba(0,0,0,0.06);
 }
 
 /* STATS */
-.stats {
+.stats-section {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 20px;
@@ -168,27 +168,6 @@ box-shadow:0 4px 12px rgba(0,0,0,0.06);
 
 .add-book:hover {
     color: #27ae60;
-}
-
-.modal button{
-width:100%;
-margin-top:10px;
-padding:12px;
-font-size:15px;
-font-weight:600;
-border:none;
-border-radius:8px;
-cursor:pointer;
-box-shadow:0 4px 10px rgba(0,0,0,0.15);
-}
-
-.modal button:hover{
-transform:translateY(-1px);
-box-shadow:0 6px 14px rgba(0,0,0,0.18);
-}
-
-.modal button:active{
-transform:scale(0.98);
 }
 
 /* INPUT */
@@ -307,133 +286,95 @@ color:#777;
 margin: 2px 0;
 }
 
-.menu-button{
-position:absolute;
-top:8px;
-right:8px;
-border:none;
-background:none;
-font-size:18px;
-cursor:pointer;
-opacity:0;
-transition:0.2s;
-z-index: 10;
+.action-container {
+    display: flex;
+    flex-direction: column; /* Tombol berderet ke bawah seperti di mockup kamu */
+    gap: 8px;               /* Jarak antar tombol */
+    margin-top: 15px;
 }
 
-.book:hover .menu-button{
-opacity:1;
+.action-container button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background-color: #f3f4f6; /* Warna dasar abu-abu sangat muda */
+    color: #374151;
 }
 
- /* BOOK MENU BUTTON */
-
-.menu-button{
-position:absolute;
-top:8px;
-right:8px;
-
-background:rgba(0,0,0,0.5);
-color:white;
-
-border:none;
-border-radius:6px;
-
-width:26px;
-height:26px;
-
-display:flex;
-align-items:center;
-justify-content:center;
-
-opacity:0;
-transition:0.2s;
+/* Tombol Centang (Toggle Selesai/Belum) */
+.status-btn.incomplete {
+    color: #059669; /* Hijau */
+    background-color: #ecfdf5;
 }
 
-.book:hover .menu-button{
-opacity:1;
+.status-btn.complete {
+    color: #6b7280; /* Abu-abu */
 }
 
-/* DROPDOWN MENU */
-.dropdown-menu{
-position:absolute;
-top:38px;
-right:8px;
-background:white;
-border-radius:8px;
-box-shadow:0 6px 20px rgba(0,0,0,0.15);
-display:none;
-flex-direction:column;
-overflow:hidden;
-z-index:10;
+.status-btn:hover {
+    filter: brightness(0.95);
 }
 
-.dropdown-menu button{
-padding:8px 12px;
-background:none;
-border:none;
-text-align:left;
-font-size:13px;
-cursor:pointer;
+/* Tombol Edit */
+.action-container button[data-testid="bookItemEditButton"] {
+    background-color: #fff7ed;
+    color: #c2410c; /* Oranye */
 }
 
-.dropdown-menu button:hover{
-background:#f3f3f3;
+.action-container button[data-testid="bookItemEditButton"]:hover {
+    background-color: #ffedd5;
 }
 
-.dropdown-menu.show{
-display:flex;
+/* Tombol Hapus */
+.action-container button[data-testid="bookItemDeleteButton"] {
+    background-color: #fef2f2;
+    color: #dc2626; /* Merah */
 }
 
-
-/* TOGGLE MARK BUTTON  */
-.toggle-btn{
-position:absolute;
-display:flex;
-align-items:center;
-justify-content:center;
-width:30px;
-height:30px;
-border:none;
-font-size:14px;
-color:#fff;
-box-shadow:0 4px 10px rgba(0,0,0,0.25);
-transition:0.2s;
-z-index:999;
+.action-container button[data-testid="bookItemDeleteButton"]:hover {
+    background-color: #fee2e2;
 }
 
-.toggle-btn.incomplete, 
-.toggle-btn.complete:hover{
-background-color: #ccc;
-}
-
-.toggle-btn.complete, 
-.toggle-btn.incomplete:hover{
-background:#4CAF50;
-}
-
-.toggle-btn::after{
-content:attr(data-tooltip);
-position:absolute;
-transform:translateX(-50%);
-bottom:110%;
-left:90%;
-padding:4px 8px;
-border-radius:5px;
-font-size:11px;
-background:#333;
-color:white;
-white-space:nowrap;
-opacity:0;
-pointer-events:none;
-transition:0.5s;
-z-index:1;
-}
-
-.toggle-btn:hover::after{
-opacity:1;
-transition-delay:1.0s;
+.footer {
+    text-align: center;
+    padding: 20px;
+    background-color: #f2f2f2;
+    color: #777;
+    font-size: 14px;
+    margin-top: 30px;
 }
 
 /* MODAL */
+
+.modal button{
+width:100%;
+margin-top:10px;
+padding:12px;
+font-size:15px;
+font-weight:600;
+border:none;
+border-radius:8px;
+cursor:pointer;
+box-shadow:0 4px 10px rgba(0,0,0,0.15);
+}
+
+.modal button:hover{
+transform:translateY(-1px);
+box-shadow:0 6px 14px rgba(0,0,0,0.18);
+}
+
+.modal button:active{
+transform:scale(0.98);
+}
+
 .modal {
     display: none; 
     position: fixed;
@@ -446,7 +387,9 @@ transition-delay:1.0s;
     backdrop-filter: blur(4px);
     align-items: center;
     justify-content: center;
+    z-index:9999;
 }
+
 /* Animasi untuk modal muncul dengan efek slide down */
 @keyframes slideDown {
     from { transform: translateY(-30px); opacity: 0; }
@@ -607,12 +550,6 @@ transform:translateY(0);
 
     .book img {
         height: 180px;
-    }
-
-    .menu-button {
-        opacity: 1;
-        width: 32px; 
-        height: 32px;
     }
 
     h1 {
