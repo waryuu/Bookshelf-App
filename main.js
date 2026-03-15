@@ -20,8 +20,8 @@ function generateId() {
 }
 
 // Fungsi untuk mengenerate objek buku
-function generateBookObject(id, title, author, year, isComplete, cover) {
-    return { id, title, author, year, isComplete, cover };
+function generateBookObject(id, title, author, year, isComplete) {
+    return { id, title, author, year, isComplete };
 }
 
 // Fungsi untuk mencari buku berdasarkan ID untuk keperluan edit
@@ -41,7 +41,13 @@ function findBookIndex(bookId) {
 // Fungsi untuk menyimpan data ke localStorage
 function saveData() {
     if (isStorageExist()) {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(books));
+        //  Simpan ke localStorage jika ada buku, jika tidak ada buku hapus data di localStorage
+        if (books.length > 0) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(books));
+        } 
+        else {
+            localStorage.removeItem(STORAGE_KEY);
+        }
         document.dispatchEvent(new Event(SAVED_EVENT));
     }
 }
@@ -64,7 +70,8 @@ function showToast(message) {
     toast.innerText = message;
     toast.classList.add("show");
     setTimeout(() => {
-        toast.classList.remove("show"); }, 2000);
+        toast.classList.remove("show");
+        }, 2000);
 }
 
 // Fungsi untuk render UI berdasarkan data yang sudah difilter (untuk search)
@@ -109,10 +116,11 @@ function openEditModal(bookId) {
         document.getElementById("editTitle").value = book.title;
         document.getElementById("editAuthor").value = book.author;
         document.getElementById("editYear").value = book.year;
+        
+        // document.getElementById("editCover").value = book.cover;
         document.getElementById("editComplete").checked = book.isComplete;
-        document.getElementById("editCover").value = book.cover;
         currentEditId = bookId;
-        openModal("editModal");
+        openModal("editBookModal");
     }
 }
 
@@ -125,11 +133,11 @@ function addBook() {
     const author = document.getElementById("bookFormAuthor").value;
     const year = Number(document.getElementById("bookFormYear").value);
 
-    const coverInput = document.getElementById("bookFormCover").value;
-    const cover = coverInput || "default.png"; // Gunakan default jika tidak ada input cover
+    // const coverInput = document.getElementById("bookFormCover").value;
+    // const cover = coverInput || "default.png"; // Gunakan default jika tidak ada input cover
 
     const isComplete = document.getElementById("bookFormIsComplete").checked;
-    const bookObject = generateBookObject(id, title, author, year, isComplete, cover);
+    const bookObject = generateBookObject(id, title, author, year, isComplete);
     
     books.push(bookObject);
     document.dispatchEvent(new Event(RENDER_EVENT));
@@ -137,8 +145,8 @@ function addBook() {
     showToast(`Buku '${title}' berhasil ditambahkan`);
 }
 
-// Fungsi untuk toggle status buku antara selesai atau belum selesai
-function toggleBook(bookId) {
+// Fungsi untuk status buku antara selesai atau belum selesai
+function statusBook(bookId) {
     const book = findBook(bookId);
     book.isComplete = !book.isComplete;
     document.dispatchEvent(new Event(RENDER_EVENT));
@@ -148,21 +156,21 @@ function toggleBook(bookId) {
 
 // Fungsi untuk menghapus buku berdasarkan ID
 function deleteBook(bookId) {
-    const confirmDelete = confirm("Yakin ingin menghapus buku?");
-    if (!confirmDelete) return;
+    // const confirmDelete = confirm("Yakin ingin menghapus buku?");
+    // if (!confirmDelete) return;
     
     const index = findBookIndex(bookId);
-    if (index !== -1) {
-        books.splice(index, 1);
-        document.dispatchEvent(new Event(RENDER_EVENT));
-        saveData();
-        showToast(`Buku berhasil dihapus`);
-    }
+    if (index === -1) return;
+
+    books.splice(index, 1);
+    saveData();
+    document.dispatchEvent(new Event(RENDER_EVENT));
+    showToast(`Buku berhasil dihapus`);
 }
 
 // Fungsi untuk membuat elemen buku di DOM berdasarkan objek buku
 function makeBook(bookObject) {
-    const container = document.createElement("article");
+    const container = document.createElement("div");
     const book_title = document.createElement("h3");
     book_title.innerText = bookObject.title;
     book_title.setAttribute("title", bookObject.title);
@@ -171,12 +179,43 @@ function makeBook(bookObject) {
     container.setAttribute("data-bookid", bookObject.id);
     container.setAttribute("data-testid", "bookItem");
 
-    const menuButton = document.createElement("button");
-    menuButton.classList.add("menu-button");
-    menuButton.innerText = "⋮";
+    const title = document.createElement("h3");
+    title.innerText = bookObject.title;
+    title.setAttribute("data-testid", "bookItemTitle");
 
-    const menu = document.createElement("div");
-    menu.classList.add("dropdown-menu");
+    // const cover = document.createElement("img");
+    // cover.src = bookObject.cover || "default.png";
+
+    const author = document.createElement("p");
+    author.innerText = "Penulis: " + bookObject.author;
+    author.setAttribute("data-testid", "bookItemAuthor");
+
+    const year = document.createElement("p");
+    year.innerText = "Tahun: " + bookObject.year;
+    year.setAttribute("data-testid", "bookItemYear");
+    
+    const isCompleteButton = document.createElement("button");
+    isCompleteButton.setAttribute("data-testid", "bookItemIsCompleteButton");
+    isCompleteButton.classList.add("status-btn");
+    isCompleteButton.innerHTML = bookObject.isComplete ? "Belum selesai dibaca" : "Selesai dibaca";
+    isCompleteButton.classList.add(bookObject.isComplete ? "complete" : "incomplete");
+    isCompleteButton.setAttribute("data-tooltip", bookObject.isComplete ? "Pindahkan ke Belum selesai" : "Tandai sebagai Selesai");
+    
+    isCompleteButton.addEventListener("click", (e) => {
+        e.stopPropagation();
+        statusBook(bookObject.id);
+    });
+
+    const actionContainer = document.createElement("div");
+    actionContainer.classList.add("action-container");
+   
+    const del = document.createElement("button");
+    del.innerText = "🗑 Hapus Buku";
+    del.setAttribute("data-testid", "bookItemDeleteButton");
+    del.addEventListener("click", (e) => {
+        e.stopPropagation();
+        deleteBook(bookObject.id);
+    });
 
     const edit = document.createElement("button");
     edit.innerText = "✏️ Edit Buku";
@@ -186,64 +225,13 @@ function makeBook(bookObject) {
         openEditModal(bookObject.id);
     });
 
-    const del = document.createElement("button");
-    del.innerText = "🗑 Hapus";
-    del.setAttribute("data-testid", "bookItemDeleteButton");
-    del.addEventListener("click", (e) => {
-        e.stopPropagation();
-        deleteBook(bookObject.id);
-    });
+    actionContainer.append(isCompleteButton, del, edit);
 
-    menu.append(edit, del);
-    if (bookObject.isComplete) container.classList.add("complete");
-
-    menuButton.addEventListener("click", (e) => {
-        e.stopPropagation();
-        document.querySelectorAll(".dropdown-menu").forEach(m => {
-            if (m !== menu) m.classList.remove("show");
-        });
-        menu.classList.toggle("show");
-    });
-
-    const isCompleteButton = document.createElement("button");
-    isCompleteButton.setAttribute("data-testid", "bookItemIsCompleteButton");
-    isCompleteButton.classList.add("toggle-btn");
-    isCompleteButton.innerHTML = "✔";
-    isCompleteButton.classList.add(bookObject.isComplete ? "complete" : "incomplete");
-    isCompleteButton.setAttribute("data-tooltip", bookObject.isComplete ? "Pindahkan ke Belum selesai" : "Tandai sebagai Selesai");
-    isCompleteButton.addEventListener("click", (e) => {
-        e.stopPropagation();
-        toggleBook(bookObject.id);
-    });
-
-    const cover = document.createElement("img");
-    cover.src = bookObject.cover || "default.png";
-
-    const title = document.createElement("h3");
-    title.innerText = bookObject.title;
-    title.setAttribute("data-testid", "bookItemTitle");
-
-    const author = document.createElement("p");
-    author.innerText = "Penulis: " + bookObject.author;
-    author.setAttribute("data-testid", "bookItemAuthor");
-
-    const year = document.createElement("p");
-    year.innerText = "Tahun: " + bookObject.year;
-    year.setAttribute("data-testid", "bookItemYear");
-
-    container.append(menuButton, menu, cover, isCompleteButton, title, author, year);
+    container.append(title, author, year, actionContainer);
     return container;
 }
 
-
-//
-
-
-
-
-
 // --- EVENT LISTENERS ---
-
 // DOM Loaded
 document.addEventListener("DOMContentLoaded", function () {
 
@@ -265,18 +253,6 @@ document.addEventListener("DOMContentLoaded", function () {
     window.addEventListener("click", (e) => {
         if (e.target.classList.contains("modal")) {
             closeModal(e.target.id);
-        }
-    });
-
-    // Listener Global untuk menutup dropdown saat klik di luar item
-    window.addEventListener('click', function(event) {
-    const dropdowns = document.querySelectorAll('.dropdown-menu');
-    const isClickInsideMenuButton = event.target.closest('.menu-button');
-    if (!isClickInsideMenuButton) {
-        dropdowns.forEach(dropdown => {
-            // Hapus class 'show' agar menu tersembunyi
-            dropdown.classList.remove('show');
-            });
         }
     });
 
@@ -389,9 +365,9 @@ document.addEventListener("DOMContentLoaded", function () {
             book.author = document.getElementById("editAuthor").value;
             book.year = Number(document.getElementById("editYear").value);
             book.isComplete = document.getElementById("editComplete").checked;
-            book.cover = document.getElementById("editCover").value;
+            // book.cover = document.getElementById("editCover").value;
 
-            closeModal("editModal");
+            closeModal("editBookModal");
             document.dispatchEvent(new Event(RENDER_EVENT));
             saveData();
             showToast(`Buku '${book.title}' berhasil diperbarui`);
