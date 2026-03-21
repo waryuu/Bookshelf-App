@@ -44,7 +44,7 @@ function saveData() {
         //  Simpan ke localStorage jika ada buku, jika tidak ada buku hapus data di localStorage
         if (books.length > 0) {
             localStorage.setItem(STORAGE_KEY, JSON.stringify(books));
-        } 
+        }
         else {
             localStorage.removeItem(STORAGE_KEY);
         }
@@ -71,7 +71,7 @@ function showToast(message) {
     toast.classList.add("show");
     setTimeout(() => {
         toast.classList.remove("show");
-        }, 2000);
+    }, 2000);
 }
 
 // Fungsi untuk render UI berdasarkan data yang sudah difilter (untuk search)
@@ -116,7 +116,7 @@ function openEditModal(bookId) {
         document.getElementById("editTitle").value = book.title;
         document.getElementById("editAuthor").value = book.author;
         document.getElementById("editYear").value = book.year;
-        
+
         // document.getElementById("editCover").value = book.cover;
         document.getElementById("editComplete").checked = book.isComplete;
         currentEditId = bookId;
@@ -138,7 +138,7 @@ function addBook() {
 
     const isComplete = document.getElementById("bookFormIsComplete").checked;
     const bookObject = generateBookObject(id, title, author, year, isComplete);
-    
+
     books.push(bookObject);
     document.dispatchEvent(new Event(RENDER_EVENT));
     saveData();
@@ -158,7 +158,7 @@ function statusBook(bookId) {
 function deleteBook(bookId) {
     // const confirmDelete = confirm("Yakin ingin menghapus buku?");
     // if (!confirmDelete) return;
-    
+
     const index = findBookIndex(bookId);
     if (index === -1) return;
 
@@ -193,14 +193,14 @@ function makeBook(bookObject) {
     const year = document.createElement("p");
     year.innerText = "Tahun: " + bookObject.year;
     year.setAttribute("data-testid", "bookItemYear");
-    
+
     const isCompleteButton = document.createElement("button");
     isCompleteButton.setAttribute("data-testid", "bookItemIsCompleteButton");
     isCompleteButton.classList.add("status-btn");
     isCompleteButton.innerHTML = bookObject.isComplete ? "Belum selesai dibaca" : "Selesai dibaca";
     isCompleteButton.classList.add(bookObject.isComplete ? "complete" : "incomplete");
     isCompleteButton.setAttribute("data-tooltip", bookObject.isComplete ? "Pindahkan ke Belum selesai" : "Tandai sebagai Selesai");
-    
+
     isCompleteButton.addEventListener("click", (e) => {
         e.stopPropagation();
         statusBook(bookObject.id);
@@ -208,7 +208,7 @@ function makeBook(bookObject) {
 
     const actionContainer = document.createElement("div");
     actionContainer.classList.add("action-container");
-   
+
     const del = document.createElement("button");
     del.innerText = "🗑 Hapus Buku";
     del.setAttribute("data-testid", "bookItemDeleteButton");
@@ -243,7 +243,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Closing lewat tombol batal di modals
     document.querySelectorAll(".btn-cancel").forEach(btn => {
-        btn.addEventListener("click", function() {
+        btn.addEventListener("click", function () {
             const modal = this.closest(".modal");
             closeModal(modal.id);
         });
@@ -274,8 +274,8 @@ document.addEventListener("DOMContentLoaded", function () {
                     ...data
                 };
                 books.push(bookWithId);
-            showToast("20 buku berhasil di-import");
-        });
+                showToast("20 buku berhasil di-import");
+            });
             // Hide import setelah dipakai
             saveData();
             document.dispatchEvent(new Event(RENDER_EVENT));
@@ -304,12 +304,12 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // Clear Rak Complete atau Selesai dibaca
-    document.getElementById("clearComplete").addEventListener("click", function() {
-    if (confirm("Hapus semua buku yang sudah selesai dibaca?")) {
+    document.getElementById("clearComplete").addEventListener("click", function () {
+        if (confirm("Hapus semua buku yang sudah selesai dibaca?")) {
             const remainingBooks = books.filter(book => !book.isComplete);
             books.length = 0; // Clear original array
             books.push(...remainingBooks);
-            
+
             document.dispatchEvent(new Event(RENDER_EVENT));
             saveData();
             showToast("Rak 'Selesai dibaca' dikosongkan");
@@ -317,27 +317,27 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // Clear Rak Incomplete atau Belum selesai dibaca
-    document.getElementById("clearIncomplete").addEventListener("click", function() {
-    if (confirm("Hapus semua buku yang belum selesai dibaca?")) {
+    document.getElementById("clearIncomplete").addEventListener("click", function () {
+        if (confirm("Hapus semua buku yang belum selesai dibaca?")) {
             const remainingBooks = books.filter(book => book.isComplete);
             books.length = 0;
             books.push(...remainingBooks);
-            
+
             document.dispatchEvent(new Event(RENDER_EVENT));
             saveData();
             showToast("Rak 'Belum selesai dibaca' dikosongkan");
         }
     });
 
-     // Mark All Complete / Selesai dibaca
-    document.getElementById("markAllComplete").addEventListener("click", function() {
+    // Mark All Complete / Selesai dibaca
+    document.getElementById("markAllComplete").addEventListener("click", function () {
         const incompleteBooks = books.filter(book => !book.isComplete);
-    
+
         if (incompleteBooks.length > 0) {
             incompleteBooks.forEach(book => {
                 book.isComplete = true;
             });
-            
+
             document.dispatchEvent(new Event(RENDER_EVENT));
             saveData();
             showToast("Semua buku ditandai sebagai selesai");
@@ -345,7 +345,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // Mark All Incomplete / Belum selesai dibaca
-    document.getElementById("markAllIncomplete").addEventListener("click", function() {
+    document.getElementById("markAllIncomplete").addEventListener("click", function () {
         const completeBooks = books.filter(book => book.isComplete);
         if (completeBooks.length > 0) {
             completeBooks.forEach(book => {
@@ -358,7 +358,8 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // Save Edit Action
-    document.getElementById("saveEdit").addEventListener("click", function () {
+    document.getElementById("editBookForm").addEventListener("submit", function (e) {
+        e.preventDefault();
         const book = findBook(currentEditId);
         if (book) {
             book.title = document.getElementById("editTitle").value;
@@ -372,7 +373,7 @@ document.addEventListener("DOMContentLoaded", function () {
             saveData();
             showToast(`Buku '${book.title}' berhasil diperbarui`);
         }
-    });    
+    });
 });
 
 // Render ulang UI setiap kali ada perubahan data
@@ -382,19 +383,19 @@ document.addEventListener(RENDER_EVENT, function () {
     // Clear dulu sebelum render ulang
     incompleteList.innerHTML = "";
     completeList.innerHTML = "";
-    
+
     // Filter buku berdasarkan status selesai atau belum selesai
-    const incompleteBooks=books.filter(book=>!book.isComplete);
-    const completeBooks=books.filter(book=>book.isComplete);
+    const incompleteBooks = books.filter(book => !book.isComplete);
+    const completeBooks = books.filter(book => book.isComplete);
 
     // Conditional rendering untuk empty state
     // Jika Rak incomplete kosong, tampilkan pesan "Belum ada buku di rak ini"
     if (incompleteBooks.length === 0) {
-        incompleteList.innerHTML = 
+        incompleteList.innerHTML =
             `<div class="empty-state">
                 <p>Belum ada buku di rak ini.</p>
             </div>`;
-    } 
+    }
     // Render buku yang belum selesai dibaca
     else {
         for (const book of incompleteBooks) {
@@ -408,7 +409,7 @@ document.addEventListener(RENDER_EVENT, function () {
             <div class="empty-state">
                 <p>Belum ada buku di rak ini.</p>
             </div>`;
-    } 
+    }
     // Render buku yang sudah selesai dibaca
     else {
         for (const book of completeBooks) {
@@ -418,12 +419,12 @@ document.addEventListener(RENDER_EVENT, function () {
     // Update visibility untuk tombol Mark All Complete / Incomplete
     document.getElementById("markAllComplete").style.display = incompleteBooks.length === 0 ? "none" : "inline-block";
     document.getElementById("markAllIncomplete").style.display = completeBooks.length === 0 ? "none" : "inline-block";
-    
+
     // Update visibility untuk tombol Clear Rak
     document.getElementById("clearComplete").style.display = completeBooks.length === 0 ? "none" : "inline-block";
     document.getElementById("clearIncomplete").style.display = incompleteBooks.length === 0 ? "none" : "inline-block";
-    
-     // Update visibility untuk tombol Import jika tidak ada buku sama sekali
+
+    // Update visibility untuk tombol Import jika tidak ada buku sama sekali
     const btnImport = document.getElementById("btnImport");
     if (btnImport) {
         btnImport.style.display = books.length === 0 ? "inline-block" : "none";
