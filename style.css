@@ -288,8 +288,8 @@ margin: 2px 0;
 
 .action-container {
     display: flex;
-    flex-direction: column; /* Tombol berderet ke bawah seperti di mockup kamu */
-    gap: 8px;               /* Jarak antar tombol */
+    flex-direction: column;
+    gap: 8px;               
     margin-top: 15px;
 }
 
