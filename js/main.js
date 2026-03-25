@@ -76,8 +76,9 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // --- 3. EVENT SIMPAN EDIT ---
-    document.getElementById("saveEdit").addEventListener("click", () => {
+    document.getElementById("editBookForm").addEventListener("submit", function (e) {
         const book = findBook(currentEditId);
+        e.preventDefault();
         if (book) {
             book.title = document.getElementById("editTitle").value;
             book.author = document.getElementById("editAuthor").value;
@@ -85,10 +86,10 @@ document.addEventListener("DOMContentLoaded", () => {
             book.cover = document.getElementById("cover").value;
             book.isComplete = document.getElementById("editComplete").checked;
             
-            saveData();
             closeModal("editModal");
             document.dispatchEvent(new Event(RENDER_EVENT));
-            showToast("Perubahan disimpan");
+            saveData();
+            showToast(`Buku '${book.title}' berhasil diperbarui`);
         }
     });
 
@@ -96,10 +97,9 @@ document.addEventListener("DOMContentLoaded", () => {
    document.getElementById("btnImport").addEventListener("click", () => {
     if (confirm("Import 20 data manga populer?")) {
         mangaSeedData.forEach(m => {
-            // Kita buat objek baru yang isinya data dari seed + ID baru
             const bookWithId = {
                 ...m, // mengambil title, author, year, dll
-                id: generateId() // baru kita kasih ID di sini!
+                id: generateId() // kasih ID di sini
             };
             books.push(bookWithId);
         });

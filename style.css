@@ -76,15 +76,26 @@ transform:scale(0.98);
 }
 
 .stat {
-    background: #fff;
-    padding: 20px;
-    border-radius: 15px;
+    flex: 1;
+    padding: 25px;
+    margin: 0; 
+    width: 100%;
+    border-radius: 16px;
     text-align: center;
-    position: relative; /* For the delete button positioning */
-    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+    border: 1px solid rgba(0,0,0,0.05); /* Border sangat tipis */
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
 }
 
-/* Individual Delete Buttons in Stats */
+.stat:nth-child(1) { background-color: #e3f2fd; color: #1976d2; } /* Total */
+.stat:nth-child(2) { background-color: #e8f5e9; color: #2e7d32; } /* Selesai */
+.stat:nth-child(3) { background-color: #fff3e0; color: #e65100; } /* Belum Selesai */
+
+.stat:hover {
+    transform: translateY(-5px); /* Efek interaktif saat mouse di atasnya */
+}
+
+/* Delete Buttons in Stats */
 .delete-shelf-btn {
     background: transparent;
     color: #e74c3c;
@@ -243,6 +254,15 @@ transform:scale(1.02);
     -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
     overflow: hidden;
+    
+}
+
+.book:hover h3 {
+    -webkit-line-clamp: unset; /* Lepas batasannya pas hover */
+    overflow: visible;
+    white-space: normal;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
 }
 
 /* BOOK TEXT */
